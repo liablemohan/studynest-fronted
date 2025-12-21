@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        /* Navy Blue & Beige Theme - Light Mode */
+        --background: 40 33% 98%;
+        /* Warm off-white with beige tint */
+        --foreground: 220 40% 13%;
+        /* Deep navy for text */
+        --card: 40 30% 97%;
+        /* Slightly beige card */
+        --card-foreground: 220 40% 13%;
+        --popover: 40 30% 99%;
+        --popover-foreground: 220 40% 13%;
+        --primary: 220 60% 25%;
+        /* Deep Navy Blue */
+        --primary-foreground: 40 30% 96%;
+        /* Light beige text on primary */
+        --secondary: 40 35% 90%;
+        /* Light Beige */
+        --secondary-foreground: 220 40% 20%;
+        --muted: 40 25% 92%;
+        /* Muted beige */
+        --muted-foreground: 220 20% 40%;
+        --accent: 45 85% 45%;
+        /* Dark Yellow / Gold */
+        --accent-foreground: 220 40% 13%;
+        --destructive: 0 72% 51%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 40 20% 85%;
+        /* Beige-tinted border */
+        --input: 40 20% 88%;
+        --ring: 220 60% 25%;
+        /* Navy ring */
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        /* Navy Blue & Beige Theme - Dark Mode */
+        --background: 220 40% 8%;
+        /* Very dark navy */
+        --foreground: 40 25% 92%;
+        /* Beige text */
+        --card: 220 35% 12%;
+        /* Dark navy card */
+        --card-foreground: 40 25% 92%;
+        --popover: 220 35% 10%;
+        --popover-foreground: 40 25% 92%;
+        --primary: 45 85% 50%;
+        /* Bright Gold/Yellow in dark mode */
+        --primary-foreground: 220 40% 10%;
+        --secondary: 220 30% 18%;
+        /* Muted navy */
+        --secondary-foreground: 40 25% 90%;
+        --muted: 220 30% 15%;
+        --muted-foreground: 40 15% 60%;
+        --accent: 45 85% 55%;
+        /* Bright Yellow accent */
+        --accent-foreground: 220 40% 10%;
+        --destructive: 0 62.8% 40%;
+        --destructive-foreground: 0 0% 100%;
+        --border: 220 30% 20%;
+        --input: 220 30% 18%;
+        --ring: 45 85% 50%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* Custom utilities */
+.container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.section-padding {
+    @apply py-12 md:py-20;
+}
+
+.card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Loading skeleton */
+.skeleton {
+    @apply animate-pulse bg-muted rounded;
+}
