@@ -8,7 +8,7 @@ const Card = React.forwardRef<
     <div
         ref={ref}
         className={cn(
-            "rounded-lg border bg-card text-card-foreground shadow-sm",
+            "rounded-2xl glass-card text-card-foreground transition-all duration-300 hover:shadow-card-hover",
             className
         )}
         {...props}
@@ -35,7 +35,7 @@ const CardTitle = React.forwardRef<
     <h3
         ref={ref}
         className={cn(
-            "text-2xl font-semibold leading-none tracking-tight",
+            "text-2xl font-bold leading-none tracking-tight",
             className
         )}
         {...props}
@@ -75,4 +75,22 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+// New premium card variant
+const GlassCard = React.forwardRef<
+    HTMLDivElement,
+    React.HTMLAttributes<HTMLDivElement> & { gradient?: boolean }
+>(({ className, gradient, ...props }, ref) => (
+    <div
+        ref={ref}
+        className={cn(
+            "rounded-2xl glass-card text-card-foreground transition-all duration-500",
+            "hover:shadow-card-hover hover:scale-[1.02]",
+            gradient && "border-gradient",
+            className
+        )}
+        {...props}
+    />
+))
+GlassCard.displayName = "GlassCard"
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, GlassCard }

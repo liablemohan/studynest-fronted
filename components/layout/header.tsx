@@ -4,9 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, GraduationCap, User, LogOut, Sparkles } from 'lucide-react';
+import { Menu, X, GraduationCap, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { GlowButton } from '@/components/ui/glow-button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { cn } from '@/lib/utils';
@@ -46,31 +45,36 @@ export function Header() {
     return (
         <motion.header
             className={cn(
-                'sticky top-0 z-50 w-full transition-all duration-300',
+                'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
                 scrolled
-                    ? 'bg-background/95 backdrop-blur border-b shadow-sm'
-                    : 'bg-background/80 backdrop-blur-sm border-b border-transparent'
+                    ? 'glass-strong shadow-lg'
+                    : 'bg-transparent'
             )}
             initial={{ y: -100 }}
             animate={{ y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
         >
             <div
                 className={cn(
                     'container-custom flex items-center justify-between transition-all duration-300',
-                    scrolled ? 'h-14' : 'h-16 md:h-18'
+                    scrolled ? 'h-16' : 'h-20'
                 )}
             >
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 group">
+                <Link href="/" className="flex items-center gap-3 group">
                     <motion.div
-                        whileHover={{ rotate: [0, -10, 10, 0] }}
-                        transition={{ duration: 0.5 }}
+                        className="relative"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: 'spring', stiffness: 400 }}
                     >
-                        <GraduationCap className="h-8 w-8 text-primary group-hover:text-gold transition-colors" />
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center">
+                            <GraduationCap className="h-5 w-5 text-navy-dark" />
+                        </div>
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-gold to-gold-dark blur-lg opacity-40 group-hover:opacity-70 transition-opacity" />
                     </motion.div>
                     <span className="text-xl font-bold">
-                        Study<span className="text-gold">Nest</span>
+                        <span className="text-foreground">Study</span>
+                        <span className="gradient-text">Nest</span>
                     </span>
                 </Link>
 
@@ -86,8 +90,8 @@ export function Header() {
                                 className={cn(
                                     'text-sm font-medium transition-colors',
                                     pathname === link.href
-                                        ? 'text-primary'
-                                        : 'text-muted-foreground group-hover:text-primary'
+                                        ? 'text-foreground'
+                                        : 'text-muted-foreground hover:text-foreground'
                                 )}
                             >
                                 {link.label}
@@ -95,7 +99,7 @@ export function Header() {
                             {pathname === link.href && (
                                 <motion.div
                                     layoutId="nav-indicator"
-                                    className="absolute bottom-0 left-2 right-2 h-0.5 bg-gold rounded-full"
+                                    className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-gold to-gold-dark rounded-full"
                                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                                 />
                             )}
@@ -109,9 +113,9 @@ export function Header() {
                         <div className="flex items-center gap-3">
                             <Link href={getDashboardLink()}>
                                 <Button variant="ghost" size="sm" className="gap-2">
-                                    <Avatar className="h-6 w-6 ring-2 ring-gold/30">
+                                    <Avatar className="h-7 w-7 ring-2 ring-gold/30">
                                         <AvatarImage src={user.avatar} />
-                                        <AvatarFallback className="bg-gold/10 text-gold text-xs">
+                                        <AvatarFallback className="bg-gradient-to-br from-gold to-gold-dark text-navy-dark text-xs">
                                             {user.full_name.charAt(0)}
                                         </AvatarFallback>
                                     </Avatar>
@@ -131,10 +135,9 @@ export function Header() {
                                 </Button>
                             </Link>
                             <Link href="/signup">
-                                <GlowButton size="sm" variant="gold" className="gap-1">
-                                    <Sparkles className="h-3.5 w-3.5" />
+                                <Button size="sm">
                                     Get Started
-                                </GlowButton>
+                                </Button>
                             </Link>
                         </>
                     )}
@@ -142,7 +145,7 @@ export function Header() {
 
                 {/* Mobile Menu Button */}
                 <motion.button
-                    className="md:hidden p-2 rounded-lg hover:bg-secondary"
+                    className="md:hidden p-2 rounded-xl glass"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     aria-label="Toggle menu"
                     whileTap={{ scale: 0.95 }}
@@ -181,9 +184,9 @@ export function Header() {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="md:hidden border-t bg-background overflow-hidden"
+                        className="md:hidden glass-strong overflow-hidden"
                     >
-                        <nav className="container-custom py-4 flex flex-col gap-1">
+                        <nav className="container-custom py-6 flex flex-col gap-2">
                             {publicNavLinks.map((link, index) => (
                                 <motion.div
                                     key={link.href}
@@ -195,10 +198,10 @@ export function Header() {
                                         href={link.href}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className={cn(
-                                            'block px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                                            'block px-4 py-3 rounded-xl text-sm font-medium transition-all',
                                             pathname === link.href
-                                                ? 'text-primary bg-primary/5'
-                                                : 'text-muted-foreground hover:bg-secondary'
+                                                ? 'bg-gradient-to-r from-gold/20 to-gold-dark/20 text-foreground'
+                                                : 'text-muted-foreground hover:bg-white/5'
                                         )}
                                     >
                                         {link.label}
@@ -209,7 +212,7 @@ export function Header() {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.2 }}
-                                className="border-t mt-2 pt-4 flex flex-col gap-2"
+                                className="border-t border-gold/10 mt-4 pt-4 flex flex-col gap-3"
                             >
                                 {isAuthenticated && user ? (
                                     <>
@@ -232,10 +235,9 @@ export function Header() {
                                             </Button>
                                         </Link>
                                         <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                                            <GlowButton variant="gold" className="w-full">
-                                                <Sparkles className="h-4 w-4 mr-2" />
+                                            <Button className="w-full">
                                                 Get Started
-                                            </GlowButton>
+                                            </Button>
                                         </Link>
                                     </>
                                 )}

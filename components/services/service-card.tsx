@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AnimatedCard } from '@/components/ui/animated-card';
 import { Service } from '@/lib/types';
-import { formatPrice, getCategoryColor } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
 
 interface ServiceCardProps {
     service: Service;
@@ -16,6 +16,9 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ service, index = 0 }: ServiceCardProps) {
+    const glowColors: Array<'gold' | 'navy' | 'beige'> = ['gold', 'navy', 'beige'];
+    const glowColor = glowColors[index % 3];
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -23,20 +26,20 @@ export function ServiceCard({ service, index = 0 }: ServiceCardProps) {
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
         >
-            <AnimatedCard className="h-full group">
+            <AnimatedCard className="h-full" glowColor={glowColor}>
                 <CardContent className="p-6">
                     {/* Category Badge */}
-                    <Badge className={getCategoryColor(service.category)} variant="secondary">
+                    <Badge variant="secondary">
                         {service.category}
                     </Badge>
 
                     {/* Title */}
-                    <h3 className="mt-4 text-lg font-semibold line-clamp-2 group-hover:text-primary transition-colors">
+                    <h3 className="mt-4 text-lg font-bold line-clamp-2 group-hover:text-gold transition-colors">
                         {service.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                         {service.description}
                     </p>
 
@@ -56,14 +59,14 @@ export function ServiceCard({ service, index = 0 }: ServiceCardProps) {
 
                 <CardFooter className="p-6 pt-0 flex items-center justify-between">
                     <div>
-                        <span className="text-2xl font-bold gradient-text-gold">
+                        <span className="text-2xl font-bold gradient-text">
                             {formatPrice(service.price)}
                         </span>
                     </div>
                     <Link href={`/services/${service.id}`}>
-                        <Button size="sm" className="group/btn">
+                        <Button size="sm" className="group">
                             View Details
-                            <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                            <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </Button>
                     </Link>
                 </CardFooter>

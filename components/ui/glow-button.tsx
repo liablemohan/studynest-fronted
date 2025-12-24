@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { motion, HTMLMotionProps } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface GlowButtonProps {
     children: React.ReactNode;
-    variant?: 'gold' | 'navy' | 'outline';
+    variant?: 'gold' | 'navy' | 'outline' | 'ghost';
     size?: 'sm' | 'md' | 'lg';
     enableShimmer?: boolean;
     enablePulse?: boolean;
@@ -28,15 +28,23 @@ export function GlowButton({
     type = 'button',
 }: GlowButtonProps) {
     const sizeStyles = {
-        sm: 'px-4 py-2 text-sm',
-        md: 'px-6 py-3 text-base',
-        lg: 'px-8 py-4 text-lg',
+        sm: 'px-4 py-2 text-sm rounded-lg',
+        md: 'px-6 py-3 text-base rounded-xl',
+        lg: 'px-8 py-4 text-lg rounded-2xl',
     };
 
     const variantStyles = {
-        gold: 'bg-gold-gradient text-navy-dark font-semibold',
-        navy: 'bg-navy-gradient text-white font-semibold',
-        outline: 'bg-transparent border-2 border-gold text-gold font-semibold hover:bg-gold hover:text-navy-dark',
+        gold: 'bg-gradient-to-r from-gold to-gold-dark text-navy-dark font-semibold',
+        navy: 'bg-gradient-to-r from-navy to-navy-dark text-beige-light font-semibold',
+        outline: 'bg-transparent border-2 border-gold/50 text-foreground font-semibold hover:bg-gold/10 hover:border-gold',
+        ghost: 'bg-transparent text-foreground font-semibold hover:bg-white/5',
+    };
+
+    const glowVariant = {
+        gold: 'hover:shadow-glow-gold',
+        navy: 'hover:shadow-glow-navy',
+        outline: '',
+        ghost: '',
     };
 
     return (
@@ -45,21 +53,22 @@ export function GlowButton({
             disabled={disabled}
             onClick={onClick}
             className={cn(
-                'relative rounded-lg overflow-hidden',
+                'relative overflow-hidden',
                 'transition-all duration-300',
-                'focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2',
+                'focus:outline-none focus:ring-2 focus:ring-gold/50 focus:ring-offset-2 focus:ring-offset-background',
                 'disabled:opacity-50 disabled:cursor-not-allowed',
                 sizeStyles[size],
                 variantStyles[variant],
-                enablePulse && 'animate-glow-pulse',
+                glowVariant[variant],
+                enablePulse && 'animate-pulse-glow',
                 className
             )}
             whileHover={disabled ? {} : {
-                scale: 1.02,
+                scale: 1.03,
                 y: -2,
             }}
             whileTap={disabled ? {} : {
-                scale: 0.98,
+                scale: 0.97,
                 y: 0,
             }}
             transition={{
@@ -68,7 +77,7 @@ export function GlowButton({
                 damping: 17,
             }}
         >
-            {/* Shimmer effect overlay */}
+            {/* Shimmer effect */}
             {enableShimmer && (variant === 'gold' || variant === 'navy') && (
                 <motion.span
                     className="absolute inset-0 pointer-events-none"
@@ -78,24 +87,11 @@ export function GlowButton({
                         transition: { duration: 0.6, ease: 'easeInOut' },
                     }}
                     style={{
-                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
                     }}
                 />
             )}
 
-            {/* Glow effect on hover */}
-            <motion.span
-                className="absolute inset-0 rounded-lg pointer-events-none"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                style={{
-                    boxShadow: variant === 'gold'
-                        ? '0 10px 30px -10px rgba(212, 160, 18, 0.5)'
-                        : '0 10px 30px -10px rgba(26, 58, 110, 0.5)',
-                }}
-            />
-
-            {/* Button content */}
             <span className="relative z-10 flex items-center justify-center gap-2">
                 {children}
             </span>
@@ -103,7 +99,6 @@ export function GlowButton({
     );
 }
 
-// Icon button variant
 export function GlowIconButton({
     children,
     className,
@@ -120,11 +115,10 @@ export function GlowIconButton({
             onClick={onClick}
             disabled={disabled}
             className={cn(
-                'p-3 rounded-full',
-                'bg-card border border-border',
+                'p-3 rounded-xl glass',
                 'transition-all duration-300',
-                'hover:bg-gold hover:border-gold hover:text-navy-dark',
-                'focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2',
+                'hover:bg-gold/20 hover:shadow-glow-gold',
+                'focus:outline-none focus:ring-2 focus:ring-gold/50',
                 'disabled:opacity-50 disabled:cursor-not-allowed',
                 className
             )}

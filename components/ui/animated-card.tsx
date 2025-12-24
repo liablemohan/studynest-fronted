@@ -7,9 +7,10 @@ import { cn } from '@/lib/utils';
 interface AnimatedCardProps {
     children: React.ReactNode;
     className?: string;
-    glowColor?: 'gold' | 'navy' | 'none';
+    glowColor?: 'gold' | 'navy' | 'beige' | 'none';
     enableTilt?: boolean;
     enableGlow?: boolean;
+    enableShine?: boolean;
 }
 
 export function AnimatedCard({
@@ -18,6 +19,7 @@ export function AnimatedCard({
     glowColor = 'gold',
     enableTilt = true,
     enableGlow = true,
+    enableShine = true,
 }: AnimatedCardProps) {
     const cardRef = useRef<HTMLDivElement>(null);
     const [rotateX, setRotateX] = useState(0);
@@ -34,9 +36,8 @@ export function AnimatedCard({
         const mouseX = e.clientX - centerX;
         const mouseY = e.clientY - centerY;
 
-        // Calculate rotation (max 15 degrees)
-        const rotateXValue = (mouseY / (rect.height / 2)) * -10;
-        const rotateYValue = (mouseX / (rect.width / 2)) * 10;
+        const rotateXValue = (mouseY / (rect.height / 2)) * -8;
+        const rotateYValue = (mouseX / (rect.width / 2)) * 8;
 
         setRotateX(rotateXValue);
         setRotateY(rotateYValue);
@@ -53,18 +54,27 @@ export function AnimatedCard({
     };
 
     const glowStyles = {
-        gold: 'shadow-glow-gold hover:shadow-glow-gold-lg',
-        navy: 'hover:shadow-card-hover',
+        gold: 'hover:shadow-glow-gold',
+        navy: 'hover:shadow-glow-navy',
+        beige: 'hover:shadow-glow-beige',
         none: '',
+    };
+
+    const glowColors = {
+        gold: 'rgba(212, 160, 18, 0.1)',
+        navy: 'rgba(31, 43, 71, 0.15)',
+        beige: 'rgba(212, 196, 168, 0.1)',
+        none: 'transparent',
     };
 
     return (
         <motion.div
             ref={cardRef}
             className={cn(
-                'relative rounded-xl bg-card border border-border overflow-hidden',
-                'transition-shadow duration-300',
+                'relative rounded-2xl glass-card overflow-hidden',
+                'transition-shadow duration-500',
                 enableGlow && glowStyles[glowColor],
+                enableShine && 'card-shine',
                 className
             )}
             style={{
@@ -85,21 +95,20 @@ export function AnimatedCard({
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            {/* Glow overlay */}
-            {enableGlow && glowColor === 'gold' && (
+            {/* Gradient overlay on hover */}
+            {enableGlow && (
                 <motion.div
-                    className="absolute inset-0 rounded-xl pointer-events-none"
+                    className="absolute inset-0 rounded-2xl pointer-events-none opacity-0"
                     style={{
-                        background: 'linear-gradient(135deg, rgba(212, 160, 18, 0.1) 0%, transparent 50%)',
+                        background: `radial-gradient(circle at 50% 50%, ${glowColors[glowColor]} 0%, transparent 70%)`,
                     }}
                     animate={{
                         opacity: isHovered ? 1 : 0,
                     }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.4 }}
                 />
             )}
 
-            {/* Content */}
             <div style={{ transform: 'translateZ(0)' }}>
                 {children}
             </div>
@@ -107,7 +116,6 @@ export function AnimatedCard({
     );
 }
 
-// Simplified version for non-interactive cards
 export function AnimatedCardStatic({
     children,
     className,
@@ -120,14 +128,14 @@ export function AnimatedCardStatic({
     return (
         <motion.div
             className={cn(
-                'relative rounded-xl bg-card border border-border overflow-hidden',
-                'transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1',
+                'relative rounded-2xl glass-card overflow-hidden card-shine',
+                'transition-all duration-500 hover:shadow-card-hover hover:scale-[1.02]',
                 className
             )}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5, delay }}
+            transition={{ duration: 0.6, delay }}
         >
             {children}
         </motion.div>
